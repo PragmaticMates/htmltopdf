@@ -1,0 +1,2 @@
+django==2.2.6
+django-puppeteer-pdf==0.1.3
