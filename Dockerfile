@@ -1,25 +1,25 @@
-FROM node:10.15
+FROM node:12.11.1-alpine
 
-RUN apt-get update && apt-get install -y wget --no-install-recommends \
-  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-  && apt-get update \
-  && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
-  --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get purge --auto-remove -y curl \
-  && rm -rf /src/*.deb
+ENV NODE_ENV="production" \
+    CHROME_BIN="/usr/bin/chromium-browser"
 
-
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-
-WORKDIR /app
-COPY . .
-
-RUN npm install
-RUN npm install puppeteer
+RUN set -x \
+    && apk update \
+    && apk upgrade \
+    && apk add --no-cache \
+    dumb-init \
+    udev \
+    ttf-freefont \
+    chromium \
+#    && npm install puppeteer-core@1.10.0 --silent \
+    # Cleanup
+    && apk del --no-cache make gcc g++ python binutils-gold gnupg libstdc++ \
+    && rm -rf /usr/include \
+    && rm -rf /var/cache/apk/* /root/.node-gyp /usr/share/man /tmp/* \
+    && echo
+COPY . /app
+RUN cd /app && npm install --quiet
 EXPOSE 3000
-
-ENTRYPOINT ["dumb-init", "--"]
+WORKDIR /app
+ENTRYPOINT ["/usr/bin/dumb-init"]
 CMD npm run start

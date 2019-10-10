@@ -1,8 +1,9 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 
 const saveToPdf = async url => {
   // Browser actions & buffer creator
   const browser = await puppeteer.launch({
+    executablePath: "/usr/bin/chromium-browser",
     args: ["--no-sandbox", "--disable-setuid-sandbox"] // SEE BELOW WARNING!!!
   });
   const page = await browser.newPage();
