@@ -1,14 +1,19 @@
 const puppeteer = require("puppeteer-core");
 
-const saveToPdf = async url => {
+const saveToPdf = async htmlContent => {
   // Browser actions & buffer creator
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/chromium-browser",
     args: ["--no-sandbox", "--disable-setuid-sandbox"] // SEE BELOW WARNING!!!
   });
   const page = await browser.newPage();
-  await page.goto(url);
-  const pdf = await page.pdf();
+  await page.setContent(htmlContent, {
+    waitUntil: "networkidle0",
+  });
+  const pdf = await page.pdf({
+    printBackground: true,
+    format: 'A4'
+  });
   await browser.close();
   // Return Buffer
   return pdf;
