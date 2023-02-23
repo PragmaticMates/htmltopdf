@@ -4,11 +4,11 @@ const saveToPdf = async htmlContent => {
   // Browser actions & buffer creator
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/chromium-browser",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"] // SEE BELOW WARNING!!!
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--run-all-compositor-stages-before-draw"] // SEE BELOW WARNING!!!
   });
   const page = await browser.newPage();
   await page.setContent(htmlContent, {
-    waitUntil: "networkidle0",
+    waitUntil: ["networkidle0", "load"],
   });
   const pdf = await page.pdf({
     printBackground: true,
