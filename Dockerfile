@@ -1,4 +1,4 @@
-FROM node:12.11.1-alpine
+FROM node:current-alpine
 
 ENV NODE_ENV="production" \
     CHROME_BIN="/usr/bin/chromium-browser"
@@ -13,7 +13,7 @@ RUN set -x \
     chromium \
 #    && npm install puppeteer-core@1.10.0 --silent \
     # Cleanup
-    && apk del --no-cache make gcc g++ python binutils-gold gnupg libstdc++ \
+    && apk del --no-cache make gcc g++ python3 binutils-gold gnupg libstdc++ \
     && rm -rf /usr/include \
     && rm -rf /var/cache/apk/* /root/.node-gyp /usr/share/man /tmp/* \
     && echo
