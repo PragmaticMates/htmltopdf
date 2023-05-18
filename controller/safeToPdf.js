@@ -7,6 +7,7 @@ const browserHelper = (function() {
   async function createInstance() {
     // Private method to create a new instance of the browser
     const newInstance = await puppeteer.launch({
+      headless: 'new',
       executablePath: "/usr/bin/chromium-browser",
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--run-all-compositor-stages-before-draw"] // SEE BELOW WARNING!!!
     });
