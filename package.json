@@ -1,6 +1,6 @@
 {
   "name": "htmltopdf",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -9,10 +9,10 @@
     "debug": "~4.3.4",
     "express": "~4.18.2",
     "morgan": "~1.10.0",
-    "puppeteer-core": "^19.7.2",
+    "puppeteer-core": "^20.2.1",
     "raw-body": "^2.5.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.22"
   }
 }
