@@ -4,7 +4,7 @@ services:
   htmltopdf:
     image: pragmaticcode/htmltopdf:dev
     build: ./
-    container_name: swida_htmltopdf
+    container_name: htmltopdf
     ports:
       - 3000:3000
 
