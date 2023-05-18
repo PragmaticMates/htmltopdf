@@ -33,6 +33,7 @@ const saveToPdf = async (htmlContent) => {
   await page.setContent(htmlContent, {
     waitUntil: ["load"],
   });
+  await page.waitForNetworkIdle({idleTime: 200});
   const pdf = await page.pdf({
     printBackground: true,
     format: 'A4'
