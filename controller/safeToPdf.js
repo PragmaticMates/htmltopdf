@@ -22,32 +22,45 @@ const browserHelper = (function() {
         instance = createInstance();
       }
       return instance;
+    },
+     resetInstance: function() {
+      instance = null;
     }
   };
 })();
 
 const saveToPdf = async (htmlContent) => {
-  const startTime = performance.now();
   // Browser actions & buffer creator
   const browser = await browserHelper.getInstance();
-  const page = await browser.newPage();
-  await page.setContent(htmlContent, {
-    waitUntil: ["load"],
-  });
-  await page.waitForNetworkIdle({idleTime: 200});
-  const pdf = await page.pdf({
-    printBackground: true,
-    format: 'A4'
-  });
-  await page.close();
 
-  // duration
-  const endTime = performance.now();
-  const duration = endTime - startTime;
-  console.log("saveToPdf duration: " + duration + " milliseconds");
+  try {
+    const startTime = performance.now();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, {
+      waitUntil: ["load"],
+    });
+    await page.waitForNetworkIdle({idleTime: 200});
+    const pdf = await page.pdf({
+      printBackground: true,
+      format: 'A4'
+    });
+    await page.close();
 
-  // Return Buffer
-  return pdf;
+    // duration
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    console.log("saveToPdf duration: " + duration + " milliseconds");
+
+    // Return Buffer
+    return pdf;
+
+  } catch (e) {
+    console.log('saveToPdf failed ' + e);
+    await browser.close();
+    browserHelper.resetInstance();
+  }
+
+  return null;
 };
 
 /******************** WARNING ********************* WARNING ********************* WARNING *********************
