@@ -3,7 +3,8 @@ const router = express.Router();
 const saveToPdf = require("../controller/safeToPdf");
 
 router.post("/generate-pdf", async (req, res, __) => {
-    let result = await saveToPdf(req.text);
+    const includePageNumbers = req.query.pageNumbers === 'true'
+    let result = await saveToPdf(req.text, includePageNumbers)
 
     if (!result) {
         res.status(500)

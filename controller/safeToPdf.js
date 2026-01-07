@@ -29,7 +29,7 @@ const browserHelper = (function() {
   };
 })();
 
-const saveToPdf = async (htmlContent) => {
+const saveToPdf = async (htmlContent, includePageNumbers = false) => {
   // Browser actions & buffer creator
   const browser = await browserHelper.getInstance();
 
@@ -40,10 +40,26 @@ const saveToPdf = async (htmlContent) => {
       waitUntil: ["load"],
     });
     await page.waitForNetworkIdle({idleTime: 200});
-    const pdf = await page.pdf({
-      printBackground: true,
-      format: 'A4'
-    });
+
+    const pdfOptions = {
+        printBackground: true,
+        format: 'A4'
+    };
+
+    if (includePageNumbers) {
+        pdfOptions.displayHeaderFooter = true;
+        pdfOptions.headerTemplate = `<div></div>`;
+        pdfOptions.footerTemplate = `
+        <div style="width: 100%; font-size: 16px;
+            padding: 10px 20px 10px; color: #bbb; position: relative;">
+            <div style="position: absolute; right: 35px; top: 5px;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>
+        </div>
+        `;
+        // this is needed to prevent content from being placed over the footer
+        pdfOptions.margin = {bottom: '70px'};
+    }
+
+    const pdf = await page.pdf(pdfOptions);
     await page.close();
 
     // duration
